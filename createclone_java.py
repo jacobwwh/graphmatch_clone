@@ -13,19 +13,14 @@ from edge_index import edges
 
 def get_token(node):
     token = ''
-    #print(isinstance(node, Node))
-    #print(type(node))
     if isinstance(node, str):
         token = node
     elif isinstance(node, set):
         token = 'Modifier'
     elif isinstance(node, Node):
         token = node.__class__.__name__
-    #print(node.__class__.__name__,str(node))
-    #print(node.__class__.__name__, node)
     return token
 def get_child(root):
-    #print(root)
     if isinstance(root, Node):
         children = root.children
     elif isinstance(root, set):
@@ -46,7 +41,6 @@ def get_child(root):
 def get_sequence(node, sequence):
     token, children = get_token(node), get_child(node)
     sequence.append(token)
-    #print(len(sequence), token)
     for child in children:
         get_sequence(child, sequence)
 
@@ -80,13 +74,11 @@ def traverse(node,index):
         result.append(index)
         index+=1
         for (child_name, child) in node.children():
-            #print(get_token(child),index)
             queue.push(child)
     return result
 
 def createtree(root,node,nodelist,parent=None):
     id = len(nodelist)
-    #print(id)
     token, children = get_token(node), get_child(node)
     if id==0:
         root.token=token
@@ -239,19 +231,14 @@ def createast():
     for i in range(1,13):
         for rt, dirs, files in os.walk(dirname+str(i)):
             for file in files:
-                programfile=open(os.path.join(rt,file),encoding='utf-8')
-                #print(os.path.join(rt,file))
+                programfile=open(os.path.join(rt,file),encoding='utf-8'
                 programtext=programfile.read()
-                #programtext=programtext.replace('\r','')
                 programtokens=javalang.tokenizer.tokenize(programtext)
-                #print(list(programtokens))
                 programast=javalang.parser.parse(programtokens)
                 paths.append(os.path.join(rt,file))
                 asts.append(programast)
                 get_sequence(programast,alltokens)
                 programfile.close()
-                #print(programast)
-                #print(alltokens)
     astdict=dict(zip(paths,asts))
     ifcount=0
     whilecount=0
@@ -293,13 +280,10 @@ def createseparategraph(astdict,vocablen,vocabdict,device,mode='astonly',nextsib
     print('nextuse ',nextuse)
     print(len(astdict))
     for path,tree in astdict.items():
-        #print(tree)
-        #print(path)
         nodelist = []
         newtree=AnyNode(id=0,token=None,data=None)
         createtree(newtree, tree, nodelist)
-        #print(path)
-        #print(newtree)
+
         x = []
         edgesrc = []
         edgetgt = []
@@ -321,11 +305,7 @@ def createseparategraph(astdict,vocablen,vocabdict,device,mode='astonly',nextsib
                 getedge_nextuse(newtree,vocabdict,edgesrc,edgetgt,edge_attr,variabledict)
         #x = torch.tensor(x, dtype=torch.long, device=device)
         edge_index=[edgesrc, edgetgt]
-        #edge_index = torch.tensor([edgesrc, edgetgt], dtype=torch.long, device=device)
         astlength=len(x)
-        #print(x)
-        #print(edge_index)
-        #print(edge_attr)
         pathlist.append(path)
         treelist.append([[x,edge_index,edge_attr],astlength])
         astdict[path]=[[x,edge_index,edge_attr],astlength]
@@ -384,22 +364,13 @@ def createpairdata(treedict,pathlist,device):
         #code1path=pairinfo[0]
         #print(pairinfo[0].replace('\\','/'))
         code2path = pairinfo[1].replace('\\', '/')
-        #code2path = pairinfo[1]
         label=int(pairinfo[2])
-        #label = torch.tensor(int(pairinfo[2]), dtype=torch.float, device=device)
-        #print(code1path,code2path)
         #print(treedict['googlejam4_src/1/googlejam1.p507.Mushrooms.java'])
         data1 = treedict[code1path]
         data2 = treedict[code2path]
         x1,edge_index1,edge_attr1,ast1length=data1[0][0],data1[0][1],data1[0][2],data1[1]
         x2,edge_index2,edge_attr2,ast2length=data2[0][0],data2[0][1],data2[0][2],data2[1]
-        '''matchsrc = []
-        matchtgt = []
-        for i in range(ast1length):
-            for j in range(ast2length):
-                matchsrc.append(i)
-                matchtgt.append(j)
-        match_index=[matchsrc, matchtgt]'''
+        
         #match_index = torch.tensor([matchsrc, matchtgt], dtype=torch.long, device=device)
         if edge_attr1==[]:
             edge_attr1 = None
