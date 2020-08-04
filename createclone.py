@@ -74,34 +74,6 @@ def getnodeandedge(tree,indexlist,vocabdict,src,tgt,nodedict):
         tgt.append(nodedict[tree])
         getnodeandedge(child,indexlist,vocabdict,src,tgt,nodedict)
 
-class Queue():
-    def __init__(self):
-        self.__list = list()
-
-    def isEmpty(self):
-        return self.__list == []
-
-    def push(self, data):
-        self.__list.append(data)
-    
-    def pop(self):
-        if self.isEmpty():
-            return False
-        return self.__list.pop(0)
-def traverse(node,index):
-    queue = Queue()
-    queue.push(node)
-    result = []
-    while not queue.isEmpty():
-        node = queue.pop()
-        result.append(get_token(node,mode=token_mode))
-        result.append(index)
-        index+=1
-        for (child_name, child) in node.children():
-            #print(get_token(child),index)
-            queue.push(child)
-    return result
-
 def createast():
     paths=[]
     asts=[]
