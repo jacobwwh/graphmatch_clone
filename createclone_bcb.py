@@ -120,7 +120,7 @@ def createast():
     asts=[]
     paths=[]
     alltokens=[]
-    dirname = '/home/lxt/bigclonebenchdata/'
+    dirname = 'BCB/bigclonebenchdata/'
     for rt, dirs, files in os.walk(dirname):
         for file in files:
             programfile=open(os.path.join(rt,file),encoding='utf-8')
@@ -218,22 +218,18 @@ def createseparategraph(astdict,vocablen,vocabdict,device,mode='astonly',nextsib
     #print(totalif,totalwhile,totalfor,totalblock)
     return astdict
 def creategmndata(id,treedict,vocablen,vocabdict,device):
-    indexdir='/home/lxt/graphmatch_clone/'
-    # if id=='0':
-    #     trainfile = open(indexdir+'traindata.txt')
-    #     validfile = open(indexdir+'devdata.txt')
-    #     testfile = open(indexdir+'testdata.txt')
-    # elif id=='11':
-    #     trainfile = open(indexdir+'traindata11.txt')
-    #     validfile = open(indexdir+'devdata.txt')
-    #     testfile = open(indexdir+'testdata.txt')
-    # else:
-    #     print('file not exist')
-    #     quit()
-    trainfile = open(indexdir + 'recordtraindata30w.txt')
-    validfile = open(indexdir + 'recorddevdata03133.txt')
-    testfile = open(indexdir + 'recordtestdata03133.txt')
-
+    indexdir='BCB/'
+    if id=='0':
+        trainfile = open(indexdir+'traindata.txt')
+        validfile = open(indexdir+'devdata.txt')
+        testfile = open(indexdir+'testdata.txt')
+    elif id=='11':
+        trainfile = open(indexdir+'traindata11.txt')
+        validfile = open(indexdir+'devdata.txt')
+        testfile = open(indexdir+'testdata.txt')
+    else:
+        print('file not exist')
+        quit()
     trainlist=trainfile.readlines()
     validlist=validfile.readlines()
     testlist=testfile.readlines()
@@ -248,17 +244,14 @@ def creategmndata(id,treedict,vocablen,vocabdict,device):
     testdata=createpairdata(treedict,testlist,device=device)
     return traindata, validdata, testdata
 def createpairdata(treedict,pathlist,device):
-
     datalist=[]
     countlines=1
     for line in pathlist:
         #print(countlines)
         countlines += 1
-        pairinfo = line.split("\t")
-        if len(pairinfo)!=3:
-            break
-        code1path='/home/lxt'+pairinfo[0].lstrip(".")
-        code2path='/home/lxt'+pairinfo[1].lstrip(".")
+        pairinfo = line.split()
+        code1path='BCB'+pairinfo[0].strip('.')
+        code2path='BCB'+pairinfo[1].strip('.')
         label=int(pairinfo[2])
         data1 = treedict[code1path]
         data2 = treedict[code2path]
@@ -281,9 +274,5 @@ def createpairdata(treedict,pathlist,device):
 
 if __name__ == '__main__':
     astdict, vocabsize, vocabdict=createast()
-    treedict=createseparategraph(astdict, vocabsize, vocabdict,device='cpu',mode='else',nextsib=True,ifedge=False,whileedge=False,foredge=False,blockedge=False,nexttoken=False,nextuse=False)
-    #print(astdict)
-    print(vocabsize)
-    # print(vocabdict)
-    print(treedict.keys())
+    treedict=createseparategraph(astdict, vocabsize, vocabdict,device='cpu',mode='else',nextsib=True,ifedge=True,whileedge=True,foredge=True,blockedge=True,nexttoken=True,nextuse=True)
     #creategmndata(treedict,vocabsize,vocabdict,device='cpu')
