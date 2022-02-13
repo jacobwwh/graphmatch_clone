@@ -33,8 +33,8 @@ parser.add_argument("--num_epochs", default=10)
 parser.add_argument("--lr", default=0.001)
 parser.add_argument("--threshold", default=0)
 args = parser.parse_args()
- 
-device=torch.device('cuda:0')
+
+device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 #device=torch.device('cpu')
 astdict,vocablen,vocabdict=createast()
 treedict=createseparategraph(astdict, vocablen, vocabdict,device,mode=args.graphmode,nextsib=args.nextsib,ifedge=args.ifedge,whileedge=args.whileedge,foredge=args.foredge,blockedge=args.blockedge,nexttoken=args.nexttoken,nextuse=args.nextuse)

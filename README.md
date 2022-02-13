@@ -3,7 +3,12 @@ Code for paper "Detecting Code Clones with Graph Neural Network and Flow-Augment
 Requires:   
 pytorch    
 javalang  
-pytorch-geometric  
+pytorch-geometric
+
+Install prerequisites by executing -
+```
+pip install -r requirements.txt
+```
 
 ## Data
 Google Code Jam snippets in googlejam4_src.zip  

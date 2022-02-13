@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.nn import Parameter
 import torch.nn.functional as F
 from torch_geometric.nn import MessagePassing,GatedGraphConv
-from torch_geometric.utils import degree, remove_self_loops, add_self_loops, softmax,scatter_
+from torch_geometric.utils import degree, remove_self_loops, add_self_loops, softmax
 #from torch_geometric.nn.conv import GATConv
 from torch_geometric.nn.inits import glorot, zeros
 from torch_geometric.nn.glob import GlobalAttention
@@ -141,7 +141,7 @@ class GMNlayer(MessagePassing):
         #print(match_args)
         out_attn = self.match(*match_args)
         #print(out_attn.size())
-        out_attn = scatter_(self.aggr, out_attn, edge_index[i], dim_size=size[i])
+        out_attn = torch.scatter(self.aggr, out_attn, edge_index[i], dim_size=size[i])
         #print(out_attn.size())
         out_attn = self.update(out_attn, *update_args)
         #out=torch.cat([out,out_attn],dim=1)
